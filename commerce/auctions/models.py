@@ -21,6 +21,8 @@ class Category(models.Model):
     def __str__(self):
         return f"{self.name}"
 
+    class Meta:
+        ordering = ['id']
 
 class Listing(models.Model):
     lis_name = models.CharField(max_length=50, verbose_name='name')
