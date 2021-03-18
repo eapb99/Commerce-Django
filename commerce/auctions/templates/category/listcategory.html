@@ -1,0 +1,88 @@
+{% extends "base/body.html" %}
+
+{% load static %}
+
+{% block cheader %}
+    <h4 class="text-center"> {{ title }}</h4>
+{% endblock %}
+{% block title %}
+    {{ name_page }}
+{% endblock %}
+{% block script %}
+    <script>
+        function list() {
+            document.querySelector('#content').style.display = 'none'
+            let a = `{% for obj in object_list %}
+                      {{ obj }}
+                    {% endfor %}`
+            alert(a)
+        }
+    </script>
+{% endblock %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        {% if object_list %}
+            <div class="card card-solid" id="content">
+                <div class="card-body pb-0">
+                    <div class="row d-flex align-items-stretch">
+                        {% for foo in object_list %}
+                            <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch">
+                                <div class="card bg-light">
+                                    <div class="card-header text-muted border-bottom-0 text-center">
+                                        <b style="font-size: 1.5rem">{{ foo.name }}</b>
+                                    </div>
+                                    <div class="card-body pt-0">
+                                        <div class="row">
+                                            <div class="col d-flex justify-content-center img-container">
+                                                <img class="img-thumbnail" src="{{ foo.image }}" alt="" height="30%">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer d-flex justify-content-center">
+                                        <a href="{% url 'content' foo.id %}" class="">
+                                            <button class="btn btn-primary float-right">View</button>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1"><i class="fas fa-angle-double-left"></i></a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link"
+                               href="?page={{ page_obj.previous_page_number }}"> <i class="fas fa-angle-left"></i> </a>
+                        </li>
+                    {% endif %}
+                {% for num in paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <li  class="page-item active">
+                            <span class="page-link"> {{ num }}</span>
+                        </li>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <a class="page-link"
+                           href="?page={{ num }}"> {{ num }}</a>
+                    {% endif %}
+                {% endfor %}
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}"> <i class="fas fa-angle-right"></i></a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}"><i class="fas fa-angle-double-right"></i></a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+    {% else %}
+
+    {% endif %}
+{% endblock %}

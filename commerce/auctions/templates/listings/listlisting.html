@@ -1,0 +1,123 @@
+{% extends "base/body.html" %}
+{% load static %}
+{% block head %}
+    <style>
+        #lis-card:hover {
+            transform: scale(1.02);
+        }
+    </style>
+{% endblock %}
+
+
+{% block cheader %}
+    {% if user.is_authenticated %}
+        <h4 class="text-center"> {{ title }}</h4>
+    {% endif %}
+
+{% endblock %}
+{% block title %}
+    {{ name_page }}
+{% endblock %}
+{% block content %}
+    {% if user.is_authenticated %}
+        {% if object_list %}
+            <div class="card card-success">
+                <div class="card-body">
+                    <div class="row">
+                        {% for foo in object_list %}
+                            <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch" id ='lis-card'>
+                                <div class="card bg-light">
+                                    <div class="card-header text-muted border-bottom-0">
+                                        {{ foo.lis_name }}
+                                    </div>
+                                    <div class="card-body pt-0">
+                                        <div class="row">
+                                            <div class="col-7">
+                                                {{ foo.lis_description|truncatechars:50 }}
+                                            </div>
+                                            <div class="col-5 text-center">
+
+                                                <img class="img-circle img-fluid" src="{{ foo.lis_image }}" alt="">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer">
+                                        Create by: {{ foo.lis_user }}
+                                        <a href="{% url 'view' foo.id %}" class="">
+                                            <button class="btn btn-primary float-right">More Info</button>
+                                        </a>
+                                        <footer>{{ foo.lis_date }}</footer>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1"><i class="fas fa-angle-double-left"></i></a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link"
+                               href="?page={{ page_obj.previous_page_number }}"> <i class="fas fa-angle-left"></i> </a>
+                        </li>
+                    {% endif %}
+                {% for num in paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <li  class="page-item active">
+                            <span class="page-link"> {{ num }}</span>
+                        </li>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <a class="page-link"
+                           href="?page={{ num }}"> {{ num }}</a>
+                    {% endif %}
+                {% endfor %}
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}"> <i class="fas fa-angle-right"></i></a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}"><i class="fas fa-angle-double-right"></i></a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% else %}
+            <section class="content">
+                <div class="card">
+                    <div class="card-body d-flex justify-content-center">
+                        <div class="error-content">
+                            <h3><i class="fas fa-exclamation-triangle text-warning"></i> Oops!.</h3>
+                            <p>
+                                Not exists products for show in this category.
+                                Return to <a href="{% url 'category' %}">list of categories</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.error-page -->
+            </section>
+        {% endif %}
+    {% else %}
+        <section class="content">
+            <div class="card">
+                <div class="card-body d-flex justify-content-center">
+                    <div class="error-content">
+                        <h3><i class="fas fa-exclamation-triangle text-warning"></i> Oops!.</h3>
+                        <p>
+                            We could not find the page you were looking for.
+                            Meanwhile, you may return to<a href="{% url 'login' %}"> login</a> or <a
+                                href="{% url 'register' %}">register</a>
+                            form.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <!-- /.error-page -->
+        </section>
+    {% endif %}
+{% endblock %}

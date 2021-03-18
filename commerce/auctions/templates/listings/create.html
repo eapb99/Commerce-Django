@@ -1,0 +1,47 @@
+{% extends 'base/body.html' %}
+{% load widget_tweaks %}
+{% block title %}
+    {{ name_page }}
+{% endblock %}
+{% block content %}
+    <div class="d-flex justify-content-center">
+        <div class="col-8">
+            <form action="" method="post" class="form-horizontal">
+                <div class="card card-default">
+                    <div class="card-header d-flex justify-content-center bg-gradient-cyan">
+                        <h1>Create Listing</h1>
+                    </div>
+                    <div class="card-body">
+                        {% csrf_token %}
+                        {% for field in form.visible_fields %}
+                            {% if field.label == 'Category' %}
+                                <div class="form-group">
+                                    <label class="col-sm-2 col-form-label"> {{ field.label }}:</label>
+                                    <div class="p-2 ml-2">
+                                        <div class="row">
+                                            {% for foo in field %}
+                                                <div class="col-6">
+                                                    {{ foo }}
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label"> {{ field.label }}:</label>
+                                    <div class="col-sm-10">
+                                        {{ field|add_class:'form-control' }}
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <div class="card-footer bg-gradient-cyan d-flex justify-content-center">
+                        <button id="btn-submit" type="submit" class="btn btn-dark">Nuevo Registro</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends 'base/body.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-7 col-sm-6 col-md-5 d-flex align-items-stretch">
+            <div class="card bg-light">
+                <div class="card-header text-muted border-bottom-0">
+                    {{ foo.lis_name }}
+                </div>
+                <div class="card-body pt-0">
+                    <div class="row">
+                        <div class="col-7">
+                            <p>{{ foo.lis_description|slice:":50" }}</p>
+                            <p>$ {{ foo.lis_price }}</p>
+
+                        </div>
+                        <div class="col-5 text-center">
+                            <img class="img-circle img-fluid" src="{{ foo.lis_image }}" alt="">
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    Create by: {{ foo.lis_user }}
+                    <a href="#" class="">
+                        <button class="btn btn-primary float-right">More Info</button>
+                    </a>
+                    <footer>{{ foo.lis_date }}</footer>
+                </div>
+            </div>
+        </div>
+        <div class="col-5">
+            <div class="card ">
+                {% if message %}
+                    <div class="alert alert-danger alert-dismissible">
+                        <h5><i class="icon fas fa-ban"></i> <b>Remember: </b></h5>
+                        {{ message }}
+                    </div>
+                {% endif %}
+                <form method="post">
+                    <div class="card-body">
+                        {% csrf_token %}
+                        {% for visible_field in form.visible_fields %}
+                            <div class="form-group">
+                                <label for="">{{ visible_field.label }}</label>
+                                {{ visible_field|add_class:'form-control' }}
+                            </div>
+                        {% endfor %}
+                        {% for hidden_field in form.hidden_fields %}
+                            <div class="form-group">
+                                {{ hidden_field|add_class:'form-control' }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </form>
+                {% if last is not empty %}
+                    <h5 class="description text-center">The last bid for this product was from $ {{ last.initial }}</h5>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
